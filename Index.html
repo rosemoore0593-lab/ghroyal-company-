@@ -1,0 +1,598 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102f27">
+<title>Ghana Royal Shipping Company | Track Shipment</title>
+
+<style>
+:root {
+  --green:#102f27;
+  --green2:#1c4c3d;
+  --gold:#d5b36a;
+  --cream:#f6f5f0;
+  --white:#fff;
+  --text:#26332d;
+  --muted:#78847d;
+  --border:#e4e9e4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--cream);
+  color:var(--text);
+  line-height:1.6;
+}
+header{
+  background:var(--green);
+  color:white;
+  padding:18px 6%;
+}
+.nav{
+  max-width:1150px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:46px;height:46px;
+  border:2px solid var(--gold);
+  border-radius:50%;
+  display:grid;place-items:center;
+  color:var(--gold);
+  font-weight:bold;font-size:18px;
+}
+.brand-name{font-size:15px;font-weight:bold;letter-spacing:1px}
+.brand-sub{font-size:10px;color:#d8c99f;letter-spacing:2px}
+.nav a{color:white;text-decoration:none;font-size:13px}
+.hero{
+  background:linear-gradient(120deg,#08271f,#1c4c3d);
+  color:white;
+  padding:65px 20px 85px;
+  text-align:center;
+}
+.eyebrow{
+  color:var(--gold);
+  font-size:12px;
+  letter-spacing:3px;
+  font-weight:bold;
+}
+.hero h1{
+  font-size:clamp(32px,5vw,49px);
+  line-height:1.2;
+  margin:15px 0;
+}
+.hero p{
+  color:#dce7df;
+  max-width:600px;
+  margin:auto;
+  font-size:15px;
+}
+.search-card{
+  background:white;
+  max-width:750px;
+  margin:-38px auto 40px;
+  padding:27px;
+  border-radius:12px;
+  box-shadow:0 12px 35px #00000012;
+  position:relative;
+}
+.search-card h2{font-size:21px}
+.search-card p{font-size:13px;color:var(--muted);margin-bottom:16px}
+.search-form{display:flex;gap:10px}
+input{
+  flex:1;min-width:0;
+  padding:14px;
+  border:1px solid #d6ded7;
+  border-radius:7px;
+  font-size:14px;
+}
+button{
+  border:0;border-radius:7px;
+  padding:13px 21px;
+  background:var(--green);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:hover{background:var(--green2)}
+.error{display:none;color:#b42318;font-size:13px;margin-top:10px}
+main{max-width:1000px;margin:auto;padding:0 18px 50px}
+#trackingResults{display:none}
+.section-heading{margin:25px 0 16px}
+.section-heading h2{font-size:25px;color:var(--green)}
+.section-heading p{font-size:13px;color:var(--muted)}
+.panel{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px;
+  margin-bottom:18px;
+}
+.shipment-top{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--border);
+  padding-bottom:18px;
+  margin-bottom:20px;
+}
+.label{
+  font-size:11px;
+  color:var(--muted);
+  font-weight:bold;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.tracking-number{font-size:17px;font-weight:bold;overflow-wrap:anywhere}
+.status-pill{
+  background:#e4f3e9;
+  color:#17623c;
+  padding:7px 13px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:bold;
+}
+.route{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:15px;
+}
+.route-city:last-child{text-align:right}
+.country{font-size:22px;font-weight:bold;color:var(--green)}
+.small{font-size:13px;color:var(--muted)}
+.route-arrow{font-size:27px;color:var(--gold)}
+.details-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.detail-item{
+  padding:15px;
+  background:#fafbf9;
+  border:1px solid #edf0ed;
+  border-radius:8px;
+  overflow-wrap:anywhere;
+}
+.detail-value{font-weight:bold;font-size:15px;margin-top:5px}
+.current-status{
+  background:#eaf4ed;
+  border:1px solid #d5e8da;
+  padding:19px;
+  border-radius:9px;
+  margin:12px 0 22px;
+}
+.current-status h3{
+  font-size:22px;
+  color:var(--green);
+  margin:4px 0;
+}
+.current-status p{font-size:13px;color:#64746b}
+.estimate{
+  margin-top:15px;
+  background:#f8f5eb;
+  border:1px solid #eee3c9;
+  border-radius:8px;
+  padding:15px;
+}
+.estimate strong{color:#805e24}
+.timeline{margin-top:12px}
+.event{
+  position:relative;
+  border-left:2px solid #dce5dd;
+  margin-left:10px;
+  padding:0 0 28px 36px;
+}
+.event:last-child{border-left-color:transparent;padding-bottom:0}
+.event-dot{
+  position:absolute;
+  left:-10px;top:2px;
+  width:18px;height:18px;
+  border-radius:50%;
+  background:white;
+  border:3px solid #a3afa6;
+}
+.event.completed .event-dot{
+  background:var(--green);
+  border-color:var(--green);
+  box-shadow:inset 0 0 0 3px white;
+}
+.event.current .event-dot{
+  background:var(--gold);
+  border-color:var(--gold);
+  box-shadow:0 0 0 4px #f8efd9;
+}
+.event h3{font-size:15px;margin-bottom:3px}
+.event p{font-size:13px;color:var(--muted)}
+.event-date{display:block;font-size:12px;color:#718078;margin-top:5px}
+.pending{
+  display:inline-block;
+  margin-top:7px;
+  padding:4px 8px;
+  border-radius:4px;
+  background:#f1f0eb;
+  color:#777267;
+  font-size:11px;
+  font-weight:bold;
+}
+.note{
+  background:#f8f6ef;
+  border:1px solid #eee4cf;
+  color:#6c5b3a;
+  padding:13px;
+  border-radius:8px;
+  font-size:12px;
+  margin-top:20px;
+}
+.share-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.secondary{background:white;color:var(--green);border:1px solid #cdd8ce}
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin:30px 0;
+}
+.feature{
+  background:white;
+  border:1px solid var(--border);
+  padding:22px;
+  border-radius:10px;
+}
+.feature-icon{font-size:26px;color:#a9823c}
+.feature h3{font-size:16px;color:var(--green);margin:8px 0}
+.feature p{font-size:13px;color:var(--muted)}
+footer{
+  background:var(--green);
+  color:white;
+  text-align:center;
+  padding:30px 15px;
+}
+footer p{font-size:12px;color:#d2ded5;margin-top:5px}
+@media(max-width:600px){
+  .nav{align-items:center}
+  .brand-name{font-size:12px}
+  .brand-sub{font-size:9px}
+  .hero{padding:48px 17px 65px}
+  .search-card{margin:-30px 12px 30px;padding:20px}
+  .search-form{flex-direction:column}
+  .search-form button{width:100%}
+  .panel{padding:18px}
+  .details-grid,.features{grid-template-columns:1fr}
+  .country{font-size:18px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">GR</div>
+      <div>
+        <div class="brand-name">GHANA ROYAL</div>
+        <div class="brand-sub">SHIPPING COMPANY</div>
+      </div>
+    </div>
+    <a href="#track">Track Shipment</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Your shipment, your journey</div>
+  <h1>Reliable Shipping.<br>Clear Tracking.</h1>
+  <p>
+    Follow your shipment journey and review the latest recorded
+    tracking information.
+  </p>
+</section>
+
+<section class="search-card" id="track">
+  <h2>Track Your Shipment</h2>
+  <p>Enter your tracking number to view shipment details.</p>
+
+  <form class="search-form" id="trackingForm">
+    <input id="trackingInput" type="text"
+      placeholder="Enter tracking number" required>
+    <button type="submit">Track Shipment →</button>
+  </form>
+
+  <div class="error" id="errorMessage">
+    Tracking number not found. Please check and try again.
+  </div>
+</section>
+
+<main>
+
+<section id="trackingResults">
+
+  <div class="section-heading">
+    <h2>Shipment Tracking Details</h2>
+    <p>Shipment information and recorded progress.</p>
+  </div>
+
+  <div class="panel">
+    <div class="shipment-top">
+      <div>
+        <div class="label">Tracking Number</div>
+        <div class="tracking-number">GRS-GH-IL-20261011-001</div>
+      </div>
+      <div class="status-pill">IN TRANSIT</div>
+    </div>
+
+    <div class="route">
+      <div class="route-city">
+        <div class="label">Origin</div>
+        <div class="country">Ghana</div>
+        <div class="small">Accra, Ghana</div>
+      </div>
+      <div class="route-arrow">✈ →</div>
+      <div class="route-city">
+        <div class="label">Destination</div>
+        <div class="country">Israel</div>
+        <div class="small">Israel</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-heading">
+    <h2>Shipment Information</h2>
+    <p>Sender and recipient details.</p>
+  </div>
+
+  <div class="panel">
+    <div class="details-grid">
+      <div class="detail-item">
+        <div class="label">Sender</div>
+        <div class="detail-value">Rose Anaba</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Recipient</div>
+        <div class="detail-value">Haim Shmaya</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Shipping From</div>
+        <div class="detail-value">Ghana</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Shipping To</div>
+        <div class="detail-value">Israel</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Shipment Type</div>
+        <div class="detail-value">International Parcel</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Current Status</div>
+        <div class="detail-value">In Transit to Israel</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-heading">
+    <h2>Current Shipment Status</h2>
+    <p>Latest shipment milestone.</p>
+  </div>
+
+  <div class="panel">
+    <div class="current-status">
+      <div class="label">Current Status</div>
+      <h3>✈ In Transit to Israel</h3>
+      <p>
+        The shipment is recorded as being in international transit
+        towards its destination.
+      </p>
+    </div>
+
+    <div class="estimate">
+      <div class="label">Estimated Arrival</div>
+      <strong>December 2026</strong>
+      <p class="small">
+        Estimated arrival only. Final arrival is subject to confirmation.
+      </p>
+    </div>
+  </div>
+
+  <div class="section-heading">
+    <h2>Tracking History</h2>
+    <p>Recorded events and upcoming milestones.</p>
+  </div>
+
+  <div class="panel">
+    <div class="timeline">
+
+      <div class="event completed">
+        <div class="event-dot"></div>
+        <h3>Shipment information created</h3>
+        <p>Shipment details entered into the tracking record.</p>
+        <span class="event-date">11 October 2026 · 9:45 AM</span>
+      </div>
+
+      <div class="event completed">
+        <div class="event-dot"></div>
+        <h3>Shipment accepted at shipping facility</h3>
+        <p>Package accepted at the shipping facility in Ghana.</p>
+        <span class="event-date">Acceptance recorded</span>
+      </div>
+
+      <div class="event completed">
+        <div class="event-dot"></div>
+        <h3>Departed Ghana</h3>
+        <p>Departure from Ghana recorded in the shipment history.</p>
+        <span class="event-date">Departure recorded</span>
+      </div>
+
+      <div class="event current">
+        <div class="event-dot"></div>
+        <h3>In Transit to Israel</h3>
+        <p>Current reported shipment status.</p>
+        <span class="event-date">November 2026</span>
+      </div>
+
+      <div class="event">
+        <div class="event-dot"></div>
+        <h3>Arrival in Israel</h3>
+        <p>Expected arrival in the destination country.</p>
+        <span class="pending">ESTIMATED · DECEMBER 2026</span>
+      </div>
+
+      <div class="event">
+        <div class="event-dot"></div>
+        <h3>Delivered to recipient</h3>
+        <p>Delivery confirmation has not yet been recorded.</p>
+        <span class="pending">PENDING</span>
+      </div>
+
+    </div>
+
+    <div class="note">
+      Estimated arrival dates may change. Arrival and delivery are
+      not confirmed until the corresponding events are recorded.
+    </div>
+
+    <div class="share-row">
+      <button type="button" id="shareButton">Share Tracking Link</button>
+      <button type="button" class="secondary" id="copyButton">
+        Copy Tracking Number
+      </button>
+      <button type="button" class="secondary" id="backButton">
+        Track Another Parcel
+      </button>
+    </div>
+  </div>
+
+</section>
+
+<section id="welcomeSection">
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">⌕</div>
+      <h3>Easy Tracking</h3>
+      <p>Use your shipment tracking number to view the record.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">✈</div>
+      <h3>International Shipping</h3>
+      <p>View shipment origin and destination information.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">◷</div>
+      <h3>Tracking History</h3>
+      <p>Review recorded shipment events and estimated milestones.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="brand-name">GHANA ROYAL SHIPPING COMPANY</div>
+  <p>Shipment information and tracking.</p>
+  <p>© <span id="year"></span> Ghana Royal Shipping Company</p>
+</footer>
+
+<script>
+const TRACKING_NUMBER = "GRS-GH-IL-20261011-001";
+
+const form = document.getElementById("trackingForm");
+const input = document.getElementById("trackingInput");
+const results = document.getElementById("trackingResults");
+const welcome = document.getElementById("welcomeSection");
+const errorMessage = document.getElementById("errorMessage");
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+function showTracking(number, changeUrl = true) {
+  if (number.trim().toUpperCase() !== TRACKING_NUMBER) {
+    errorMessage.style.display = "block";
+    results.style.display = "none";
+    welcome.style.display = "block";
+    return;
+  }
+
+  errorMessage.style.display = "none";
+  results.style.display = "block";
+  welcome.style.display = "none";
+
+  if (changeUrl) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("tracking", TRACKING_NUMBER);
+    history.pushState({}, "", url);
+  }
+
+  results.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+  showTracking(input.value);
+});
+
+document.getElementById("backButton").addEventListener("click", function() {
+  results.style.display = "none";
+  welcome.style.display = "block";
+  input.value = "";
+  errorMessage.style.display = "none";
+
+  const url = new URL(window.location.href);
+  url.searchParams.delete("tracking");
+  history.pushState({}, "", url);
+
+  document.getElementById("track").scrollIntoView({
+    behavior: "smooth"
+  });
+});
+
+document.getElementById("copyButton").addEventListener("click", async function() {
+  try {
+    await navigator.clipboard.writeText(TRACKING_NUMBER);
+    this.textContent = "Tracking Number Copied!";
+  } catch (error) {
+    window.prompt("Copy tracking number:", TRACKING_NUMBER);
+  }
+});
+
+document.getElementById("shareButton").addEventListener("click", async function() {
+  const url = new URL(window.location.href);
+  url.searchParams.set("tracking", TRACKING_NUMBER);
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Shipment Tracking",
+        text: "View the shipment tracking details.",
+        url: url.href
+      });
+    } catch (error) {}
+  } else {
+    try {
+      await navigator.clipboard.writeText(url.href);
+      this.textContent = "Link Copied!";
+    } catch (error) {
+      window.prompt("Copy tracking link:", url.href);
+    }
+  }
+});
+
+const sharedTracking =
+  new URLSearchParams(window.location.search).get("tracking");
+
+if (sharedTracking) {
+  input.value = sharedTracking;
+  showTracking(sharedTracking, false);
+}
+</script>
+
+</body>
+</html>
